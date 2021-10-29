@@ -32,8 +32,7 @@ export default function Home() {
         <code className={styles.code}>
           {`{
             "addresses": [
-              "0x9dcc35ae915926f7f5e8c624254d91f755d55b71",
-              "0x13b3a50f3947476eda74fe191344524e2d2d28e5"
+              "0x9dcc35ae915926f7f5e8c624254d91f755d55b71"
             ]
           }`}
         </code>
