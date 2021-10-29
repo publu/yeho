@@ -87,7 +87,7 @@ const getProtocolCounts = async (addresses, net, combineAddresses = false) => {
         chains[token.symbol] = token.amount;
         allPrices[token.symbol] = token.price
       });
-      let n = `${net} ${addr}`
+      let n = `${net}-${addr}`
       output.push([n, chains]);
     })
    )

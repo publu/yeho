@@ -7,8 +7,23 @@ const {
 
 export default async function handler(req, res) {
 
-  var data =  req.body;
-    
+  console.log(req.body);
+  if(!req.body){
+    res.status(200).send("Error: Request must be POST and include at least one of the configurations!")
+  }
+
+  var data = {};
+  const body = JSON.parse(JSON.stringify(req.body));
+  
+  if(body.dev)
+  {  
+    data["addresses"] = JSON.parse(body.addresses);
+  } else {
+    data = req.body;
+  }
+
+  console.log(data);
+
   let combineExchanges = false;
 
   const {
