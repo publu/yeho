@@ -39,7 +39,7 @@ export default function Home() {
         </code>
 
         <form method="post" action="/api/data" target="_blank">
-          <input type="hidden" name="addresses" id="fname" value='["0x9dcc35ae915926f7f5e8c624254d91f755d55b71"]' />
+          <input type="hidden" name="addresses" id="fname" value={'["0x9dcc35ae915926f7f5e8c624254d91f755d55b71"]'} />
           <button type="submit" name="dev" value="true">
             Try it out
           </button>
@@ -74,7 +74,7 @@ $$$  eth  0x9dcc35ae915926f7f5e8c624254d91f755d55b71 tokens  $$$
         </code>
 
         <p className={styles.description}>
-          You can also include FTX and Binance data by adding the apiKey & secrets (make sure they're read only!)
+          You can also include FTX and Binance data by adding the apiKey & secrets (make sure they&apos;re read only!)
         </p>
 
         <code className={styles.code}>
