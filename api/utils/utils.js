@@ -22,7 +22,7 @@ const toFixedDecimal2 = toFixedDecimal(2);
 
 const toPrecision5 = x => parseFloat(x.toPrecision(5));
 
-const printValues = values => {
+const printValues = (name, values) => {
   const total = values.find(([name]) => name === 'TOTAL')[1].USD;
 
   const res = values.map(val => {
@@ -32,21 +32,45 @@ const printValues = values => {
     return [name, `$${USD}`, `${ratio}%`, `f${FTM}`, `$${toPrecision5(price)}`, count];
   });
 
-  const headerCell = ['name', 'USD', 'ratio', 'FTM', 'price', 'count'];
+  const headerCell = ['name', 'USD', 'ratio', 'inFTM', 'price', 'count'];
   const output = table([headerCell, ...res]);
 
-  log(output);
+  if(name.indexOf("ftm") != -1){
+    coloring = chalk.cyan;
+  }else if(name.indexOf("matic") != -1){
+    coloring = chalk.magenta;
+  }else if(name.indexOf("bsc") != -1){
+    coloring = chalk.yellow;
+  }else if(name.indexOf("eth") != -1){
+    coloring = chalk.gray;
+  }else{
+    coloring = chalk.green;
+  }
+  log(coloring(output));
 };
 
 const printPortfolioNicely = res => {
   const MSG_LENGTH = 58+30;
 
   Object.entries(res).forEach(([name, values]) => {
-    log(chalk.green('-'.repeat(MSG_LENGTH)));
-    log(chalk.green(`$$$ ${pad(`${name} tokens `, MSG_LENGTH - 8)} $$$`));
-    log(chalk.green('-'.repeat(MSG_LENGTH)));
+    let coloring;
 
-    printValues(values);
+    if(name.indexOf("ftm") != -1){
+      coloring = chalk.cyan;
+    }else if(name.indexOf("matic") != -1){
+      coloring = chalk.bgMagenta;
+    }else if(name.indexOf("bsc") != -1){
+      coloring = chalk.bgYellow;
+    }else if(name.indexOf("eth") != -1){
+      coloring = chalk.bgGray;
+    }else{
+      coloring = chalk.bgGreen;
+    }
+    log(coloring('-'.repeat(MSG_LENGTH)));
+    log(coloring(`$$$ ${pad(`${name} tokens `, MSG_LENGTH - 8)} $$$`));
+    log(coloring('-'.repeat(MSG_LENGTH)));
+
+    printValues(name, values);
     log('');
   });
 };

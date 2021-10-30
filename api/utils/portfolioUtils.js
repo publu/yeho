@@ -53,26 +53,7 @@ const getTotalTokenValues = tokens => {
   return res;
 };
 
-/**
-@param {*} tokenCounts
-@param {*} prices
-@param {*} ignoreAbsBelow
-@returns an object containing 'token counts', 'USD values', and 'FTM values' for each token
-{
-  FTM: {
-    count: 1.5,
-    USD: 80000,
-    FTM: 1.5,
-  },
-  ETH: {
-    count: 100,
-    USD: 160000,
-    FTM: 3,
-  },
-  ...
-}
-*/
-const calcTokenValues = (tokenCounts, prices, FTMPrice, ignoreAbsBelow = 100) => {
+const calcTokenValues = (tokenCounts, prices, FTMPrice, ignoreAbsBelow = 1) => {
   const res = {};
   Object.entries(tokenCounts).forEach(([name, count]) => {
     const tokenData = { count };
@@ -115,7 +96,7 @@ const combineFiat = (tokenCounts, fiatName = 'USDT') => {
   return res;
 };
 
-const getTokenValues = (_tokenCounts, tokenPrices, FTMprice, sort = sortByValue, transform = combineFiat) => {
+const getTokenValues = (_tokenCounts, tokenPrices, FTMprice, sort = sortByValue) => {
   let tokenCounts = _tokenCounts;
   if (typeof transform === 'function') {
     tokenCounts = transform(tokenCounts);

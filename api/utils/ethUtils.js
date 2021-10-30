@@ -27,23 +27,22 @@ const getTokens = async address => {
     ETH: ETHBalance,
   };
   const prices = {};
-  if(tokens) {
-    tokens.forEach(t => {
-      const {
-        tokenInfo: {
-          symbol,
-          decimals,
-          price: { rate },
-        },
-        balance,
-      } = t;
-  
-      if (symbol) {
-        tokenCounts[symbol] = balance / (10 ** decimals);
-        prices[symbol] = rate;
-      }
-    });
-  }
+  tokens.forEach(t => {
+    const {
+      tokenInfo: {
+        symbol,
+        decimals,
+        price: { rate },
+      },
+      balance,
+    } = t;
+
+    if (symbol) {
+      tokenCounts[symbol] = balance / (10 ** decimals);
+      prices[symbol] = rate;
+    }
+  });
+
   return [tokenCounts, prices];
 };
 
@@ -77,7 +76,7 @@ const getProtocolCounts = async (addresses, net, combineAddresses = false) => {
 
   await Promise.all(
     addresses.map(async addr => {
-      const requestURL = `https://openapi.debank.com/v1/user/token_list?id=${addr}&chain_id=${net}&is_all=true&has_balance=true`;
+      const requestURL = `https://openapi.debank.com/v1/user/token_list?id=${addr}&chain_id=${net}&is_all=false&has_balance=true`;
       const response = await axios.get(requestURL);
       let chains  = {};
 
@@ -85,8 +84,40 @@ const getProtocolCounts = async (addresses, net, combineAddresses = false) => {
         if(token.symbol.indexOf('.') !== -1){
           return;
         }
+
+        if(!token.price) {
+          return;
+        }
+
         chains[token.symbol] = token.amount;
         allPrices[token.symbol] = token.price
+      });
+      let n = `${net} ${addr}`
+      output.push([n, chains]);
+    })
+   )
+  return [output, allPrices];
+};
+
+const getStakedCounts = async (addresses, net, combineAddresses = false) => {
+  if (isEmpty(addresses)) return [[], {}];
+
+  let output = [];
+  let allPrices = {};
+
+  await Promise.all(
+    addresses.map(async addr => {
+      const requestURL = `https://openapi.debank.com/v1/user/simple_protocol_list?id=${addr}&chain_id=${net}&is_all=true&has_balance=true`;
+      const response = await axios.get(requestURL);
+      let chains  = {};
+
+      response.data.map( token => {
+        if(token.id.indexOf('.') !== -1 || token.net_usd_value == 0){
+          return;
+        }
+        //console.log("token: ", token)
+        chains[token.id] = 1;
+        allPrices[token.id] = token.net_usd_value
       });
       let n = `${net}-${addr}`
       output.push([n, chains]);
@@ -97,6 +128,7 @@ const getProtocolCounts = async (addresses, net, combineAddresses = false) => {
 };
 
 module.exports = {
+  getStakedCounts,
   getERC20TokenCounts,
   getProtocolCounts
 };

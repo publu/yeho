@@ -28,7 +28,8 @@ const {
 
 const {
   getERC20TokenCounts,
-  getProtocolCounts
+  getProtocolCounts,
+  getStakedCounts
 } = ethUtils;
 
 const {
@@ -71,7 +72,7 @@ const getPortfolio = async ({
   progressBar.update( another()/count );
 
   progressBar.startItem('fetching Eth Tokens ...');
-  const [ethTokenCounts, ethTokenPrices] = await getERC20TokenCounts(addresses, combineAddresses);
+  const [ethTokenCounts, ethTokenPrices] = await getProtocolCounts(addresses, "eth", combineAddresses);
   progressBar.update( another()/count );
 
   progressBar.startItem('fetching BSC Tokens ...');
@@ -86,6 +87,8 @@ const getPortfolio = async ({
   const [fantomTokenCounts, fantomTokenPrices] = await getProtocolCounts(addresses, "ftm", combineAddresses);
   progressBar.update( another()/count );
 
+  const [stakedMaticTokenCounts, stakedMaticTokenPrices] = await getStakedCounts(addresses, "matic", combineAddresses);
+
   progressBar.startItem('fetching other token counts ...');
   const otherTokenCounts = sumOtherTokenCounts(othertokens);
 
@@ -97,6 +100,13 @@ const getPortfolio = async ({
     ...fantomTokenCounts,
     ...otherTokenCounts,
   ];
+
+  let eachTokenPrice = {
+      ...ethTokenPrices,
+      ...bscTokenPrices,
+      ...maticTokenPrices,
+      ...fantomTokenPrices
+   };
 
   const allTokenCounts = combineTokenCounts(
     ...eachTokenCounts.map(([, counts]) => counts),
@@ -114,16 +124,14 @@ const getPortfolio = async ({
   let tokenPrices = await getPrices(Object.keys(allTokenCounts), verbose);
 
   progressBar.startItem('calculating all token values ...');
-  progressBar.update( another()/count );
+  progressBar.update( another() / count );
 
-  tokenPrices = overwritePrices(tokenPrices, ethTokenPrices);
+  tokenPrices = overwritePrices(tokenPrices, eachTokenPrice);
 
   const allTokenValues = eachTokenCounts.map(([name, counts]) => {
     const values = getTokenValues(counts, tokenPrices, FTMprice);
     return [name, values];
   });
-
-  verbose && log(chalk.bgGreen(' FTM PUUUUMP!! '));
 
   return Object.fromEntries(allTokenValues);
 };
