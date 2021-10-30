@@ -53,7 +53,7 @@ const getTotalTokenValues = tokens => {
   return res;
 };
 
-const calcTokenValues = (tokenCounts, prices, FTMPrice, ignoreAbsBelow = 1) => {
+const calcTokenValues = (tokenCounts, prices, FTMPrice, ignoreAbsBelow = 0) => {
   const res = {};
   Object.entries(tokenCounts).forEach(([name, count]) => {
     const tokenData = { count };

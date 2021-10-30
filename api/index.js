@@ -88,6 +88,9 @@ const getPortfolio = async ({
   progressBar.update( another()/count );
 
   const [stakedMaticTokenCounts, stakedMaticTokenPrices] = await getStakedCounts(addresses, "matic", combineAddresses);
+  const [stakedEthTokenCounts, stakedEthTokenPrices] = await getStakedCounts(addresses, "eth", combineAddresses);
+  const [stakedFantomTokenCounts, stakedFantomTokenPrices] = await getStakedCounts(addresses, "ftm", combineAddresses);
+  const [stakedBscTokenCounts, stakedBscTokenPrices] = await getStakedCounts(addresses, "bsc", combineAddresses);
 
   progressBar.startItem('fetching other token counts ...');
   const otherTokenCounts = sumOtherTokenCounts(othertokens);
@@ -95,18 +98,17 @@ const getPortfolio = async ({
   let eachTokenCounts = [
     ...exchangeTokenCounts,
     ...ethTokenCounts,
+    ...stakedEthTokenCounts,
     ...bscTokenCounts,
+    ...stakedBscTokenCounts,
     ...maticTokenCounts,
+    ...stakedMaticTokenCounts,
     ...fantomTokenCounts,
-    ...otherTokenCounts,
+    ...stakedFantomTokenCounts,
+    ...otherTokenCounts
   ];
 
-  let eachTokenPrice = {
-      ...ethTokenPrices,
-      ...bscTokenPrices,
-      ...maticTokenPrices,
-      ...fantomTokenPrices
-   };
+  //console.log(eachTokenCounts);
 
   const allTokenCounts = combineTokenCounts(
     ...eachTokenCounts.map(([, counts]) => counts),
@@ -126,10 +128,20 @@ const getPortfolio = async ({
   progressBar.startItem('calculating all token values ...');
   progressBar.update( another() / count );
 
-  tokenPrices = overwritePrices(tokenPrices, eachTokenPrice);
+  let allTokenPrices = {
+      ...ethTokenPrices,
+      ...bscTokenPrices,
+      ...maticTokenPrices,
+      ...fantomTokenPrices,
+      ...stakedMaticTokenPrices,
+      ...stakedEthTokenPrices,
+      ...stakedFantomTokenPrices,
+      ...stakedBscTokenPrices,
+      ...tokenPrices
+   };
 
   const allTokenValues = eachTokenCounts.map(([name, counts]) => {
-    const values = getTokenValues(counts, tokenPrices, FTMprice);
+    const values = getTokenValues(counts, allTokenPrices, FTMprice);
     return [name, values];
   });
 

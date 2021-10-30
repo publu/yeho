@@ -55,7 +55,7 @@ const getERC20TokenCounts = async (addresses, combineAddresses = false) => {
   await Promise.all(
     addresses.map(async addr => {
       const [tokenCounts, prices] = await getTokens(addr);
-      eachTokenCounts.push([`eth ${addr}`, tokenCounts]);
+      eachTokenCounts.push([`eth-${addr}`, tokenCounts]);
       allTokenCounts = combineTokenCounts(allTokenCounts, tokenCounts);
       allPrices = combineTokenCounts(allPrices, prices);
     }),
@@ -92,7 +92,7 @@ const getProtocolCounts = async (addresses, net, combineAddresses = false) => {
         chains[token.symbol] = token.amount;
         allPrices[token.symbol] = token.price
       });
-      let n = `${net} ${addr}`
+      let n = `${net}-${addr}`
       output.push([n, chains]);
     })
    )
@@ -119,7 +119,7 @@ const getStakedCounts = async (addresses, net, combineAddresses = false) => {
         chains[token.id] = 1;
         allPrices[token.id] = token.net_usd_value
       });
-      let n = `${net}-${addr}`
+      let n = `${net}-staked-${addr}`
       output.push([n, chains]);
     })
    )

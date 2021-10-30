@@ -106,13 +106,6 @@ const getPrices = async (symbols, verbose = true) => {
     const id = symbol2Id[sanitizetokenName(c)];
     if (id) {
       ids.push(id);
-    } else {
-      verbose && log(
-        chalk.yellow('ignored token'),
-        chalk.green(` ${c} `),
-        chalk.yellow(': can\'t find it\'s coingecko id...'),
-      );
-      notSupported[c] = 0;
     }
   });
 
