@@ -27,22 +27,23 @@ const getTokens = async address => {
     ETH: ETHBalance,
   };
   const prices = {};
-  tokens.forEach(t => {
-    const {
-      tokenInfo: {
-        symbol,
-        decimals,
-        price: { rate },
-      },
-      balance,
-    } = t;
-
-    if (symbol) {
-      tokenCounts[symbol] = balance / (10 ** decimals);
-      prices[symbol] = rate;
-    }
-  });
-
+  if(tokens) {
+    tokens.forEach(t => {
+      const {
+        tokenInfo: {
+          symbol,
+          decimals,
+          price: { rate },
+        },
+        balance,
+      } = t;
+  
+      if (symbol) {
+        tokenCounts[symbol] = balance / (10 ** decimals);
+        prices[symbol] = rate;
+      }
+    });
+  }
   return [tokenCounts, prices];
 };
 

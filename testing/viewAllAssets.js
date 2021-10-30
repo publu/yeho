@@ -29,13 +29,14 @@ const {
   term.cyan( 'The hall is spacious. Someone lighted few chandeliers.\n' ) ;
   term.cyan( 'There are doorways south and west.\n' ) ;
 
-term.cyan('\n')
-term.cyan(' _______                             ______  _     _ ______  ______  _ _ _ \n')
-term.cyan('(_______)         _                 (_____ \\| |   | |  ___ \\(_____ \\| | | |\n')
-term.cyan(' _____ ____ ____ | |_  ___  ____     _____) ) |   | | | _ | |_____) ) | | |\n')
-term.cyan('|  ___) _  |  _ \\|  _)/ _ \\|    \\   |  ____/| |   | | || || |  ____/|_|_|_|\n')
-term.cyan('| |  ( ( | | | | | |_| |_| | | | |  | |     | |___| | || || | |      _ _ _ \n')
-term.cyan('|_|   \\_||_|_| |_|\\___)___/|_|_|_|  |_|      \\______|_||_||_|_|     |_|_|_|\n')
+  term.cyan('\n')
+  term.cyan(' _______                             ______  _     _ ______  ______  _ _ _ \n')
+  term.cyan('(_______)         _                 (_____ \\| |   | |  ___ \\(_____ \\| | | |\n')
+  term.cyan(' _____ ____ ____ | |_  ___  ____     _____) ) |   | | | _ | |_____) ) | | |\n')
+  term.cyan('|  ___) _  |  _ \\|  _)/ _ \\|    \\   |  ____/| |   | | || || |  ____/|_|_|_|\n')
+  term.cyan('| |  ( ( | | | | | |_| |_| | | | |  | |     | |___| | || || | |      _ _ _ \n')
+  term.cyan('|_|   \\_||_|_| |_|\\___)___/|_|_|_|  |_|      \\______|_||_||_|_|     |_|_|_|\n')
+  
   var items = [ 'Exchange Summary' , 'Exchange Detailed', 'Tokens Detailed' , 'All of them', 'Create Snapshot'] ;
 
   let selectedIndex;
