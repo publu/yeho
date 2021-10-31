@@ -33,7 +33,7 @@ export default function Home() {
         </p>
 
         <p>
-          dm me on <a href="https://twitter.com/itspublu" target="_blank">twitter.com</a> to collab.
+          dm me on <a href="https://twitter.com/itspublu" rel="noreferrer" target="_blank">twitter.com</a> to collab.
         </p>
 
         <p className={styles.description}>
