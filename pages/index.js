@@ -17,8 +17,23 @@ export default function Home() {
         </h1>
 
         <p>
-          A simple aggregator for both exchange data (FTX & Binance) as well as (most) DeFi tokens.<br />
-          Works with BSC, FTM, MATIC, Arbitrum, HECO, OP, and more!
+          A simple aggregator for both exchange data (FTX & Binance) as well as (most) DeFi tokens.
+        </p>
+
+        <p>
+          It tracks the net USD value of multiple addresses on Fantom, Ethereum, Polygon, Avalanche, and Binance Smart Chain.
+        </p>
+
+        <p>
+          It gets the net value of your Futures contracts as well as spot positions through the CCXT library.
+        </p>
+
+        <p>
+          Currently supports FTX and Binance. Can add more api keys once I get some to test with!
+        </p>
+
+        <p>
+          dm me on <a href="https://twitter.com/itspublu" target="_blank">twitter.com</a> to collab.
         </p>
 
         <p className={styles.description}>
