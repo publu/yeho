@@ -66,6 +66,7 @@ const calcTokenValues = (tokenCounts, prices, FTMPrice, ignoreAbsBelow = 0) => {
       tokenData.USD = parseInt(count * price);
       tokenData.FTM = toFixedDecimal2(value_FTM);
       tokenData.price = price;
+      tokenData.health = 1;
       res[name] = tokenData;
     }
   });
