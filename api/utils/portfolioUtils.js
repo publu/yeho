@@ -41,6 +41,7 @@ const getTotalTokenValues = tokens => {
     USD: 0,
     FTM: 0,
     price: 0,
+    health: 1
   };
 
   Object.values(tokens).forEach(({ FTM, USD }) => {
