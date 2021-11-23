@@ -31,7 +31,7 @@ const fetchBinanceContractBalances = async binance => {
     tokenCount[tokenName] = tokenCount[tokenName]
       ? tokenCount[tokenName] + count
       : count;
-    tokenCount.USDT -= value;
+    //tokenCount.USDT -= value;
   });
 
   return filterObj(
@@ -97,15 +97,22 @@ const getExchangeTokenCounts = async (keys, extraFetchers, combineExchanges = fa
     const fetcher = extraFetchers[exchangeName];   // extra functions to calculate future/margin balances
     if (fetcher) {
       const extratokenCount = await fetcher(exchange);
-      tokenCounts = combineTokenCounts(tokenCounts, extratokenCount);
+
+      eachTokenCounts.push([String(exchangeName+"-futures"), extratokenCount]);
+      allTokenCounts = combineTokenCounts(allTokenCounts, tokenCounts);
+
+      // tokenCounts = combineTokenCounts(tokenCounts, extratokenCount);
     }
 
     allTokenCounts = combineTokenCounts(allTokenCounts, tokenCounts);
+
     eachTokenCounts.push([exchangeName, tokenCounts]);
   });
 
   await Promise.all(pendings);
 
+  console.log(eachTokenCounts);
+  
   return combineExchanges
     ? [['exchange', allTokenCounts]]
     : eachTokenCounts;
