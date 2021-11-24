@@ -1,3 +1,5 @@
+const ccxt = require('ccxt');
+
 const {
   getPortfolio,
   printPortfolioNicely,
@@ -22,10 +24,6 @@ export default async function handler(req, res) {
     data = req.body;
   }
 
-  console.log(data);
-
-  let combineExchanges = false;
-
   const {
     keys,
     othertokens,
@@ -35,20 +33,32 @@ export default async function handler(req, res) {
   const {
     fetchBinanceContractBalances,
     fetchFTXContractBalances,
+    fetchBinanceContractBalancesRaw,
   } = fetchers;
 
-  const extraFetchers = {
-    binance: fetchBinanceContractBalances,
-    ftx: fetchFTXContractBalances,
-  };
+  let combineExchanges = false;
 
-  let portfolio = await getPortfolio({
-      keys,
-      addresses,
-      othertokens,
-      combineExchanges,
-      extraFetchers,
-    });
-  
-  res.status(200).json(portfolio)
+  if(body.future){
+    console.log(keys);
+    const exchange = new ccxt["binance"](keys.binance);
+
+    const positions = await fetchBinanceContractBalancesRaw(exchange);
+    console.log(positions)
+    res.status(200).json(positions);
+  } else {
+
+    const extraFetchers = {
+      binance: fetchBinanceContractBalances,
+      ftx: fetchFTXContractBalances,
+    };
+
+    let portfolio = await getPortfolio({
+        keys,
+        addresses,
+        othertokens,
+        combineExchanges,
+      });
+    
+    res.status(200).json(portfolio)
+  }
 }

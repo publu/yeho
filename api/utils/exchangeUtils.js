@@ -13,6 +13,15 @@ const {
   combineTokenCounts,
 } = portfolioUtils;
 
+const fetchBinanceContractBalancesRaw = async binance => {
+  const res = await binance.fetchBalance({ type: 'future' });
+
+  const curPositions = res.info.positions.filter(x => x.positionAmt > 0);
+  const tokenCount = res.total;      // total balances in future account
+
+  return curPositions;
+};
+
 const fetchBinanceContractBalances = async binance => {
   const res = await binance.fetchBalance({ type: 'future' });
 
@@ -25,6 +34,7 @@ const fetchBinanceContractBalances = async binance => {
       positionAmt: _count,
       notional: value,
     } = p;
+
     const tokenName = symbol.replace('USDT', '');
     const count = parseInt(_count, 10);
 
@@ -123,5 +133,6 @@ module.exports = {
   fetchers: {
     fetchBinanceContractBalances,
     fetchFTXContractBalances,
+    fetchBinanceContractBalancesRaw,
   },
 };
