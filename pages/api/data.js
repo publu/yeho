@@ -4,7 +4,7 @@ const {
   getPortfolio,
   printPortfolioNicely,
   fetchers,
-} = require('../../api/index');
+} = require('../../modules/sync/src/api/index');
 
 
 export default async function handler(req, res) {
