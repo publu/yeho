@@ -1,3 +1,5 @@
+import { add } from 'lodash';
+
 const ccxt = require('ccxt');
 
 const {

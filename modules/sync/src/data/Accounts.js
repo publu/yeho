@@ -24,7 +24,15 @@ const getAccounts = async (filters) => {
     return formatReturnData(error, data);
 }
 
+const insertAccounts = async (portfolio) => {
+    const { data, error } = await supabase
+        .from(table)
+        .insert(portfolio)
+
+    return formatReturnData(error, data);
+}
 
 module.exports = {
     getAccounts,
+    insertAccounts
 };
