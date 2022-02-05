@@ -2,7 +2,7 @@ const { initSupabase } = require('../supabase-connect');
 const { formatReturnData } = require('../helpers/data-helpers');
 
 let supabase = initSupabase();
-const table = 'QFG.Accounts';
+const table = 'QFG.Portfolio';
 
 /**
  * Account stores wallets and its contents.
@@ -10,7 +10,7 @@ const table = 'QFG.Accounts';
  * @param {object} filters key:value object of filters
  * @returns json
  */
-const getAccounts = async (filters) => {
+const getPortfolio = async (filters) => {
     let query = supabase
         .from(table)
         .select()
@@ -21,18 +21,18 @@ const getAccounts = async (filters) => {
 
     const { error, data } = await query;
 
-    return formatReturnData(error, data);
+    return formatReturnData(error, data, table);
 }
 
-const insertAccounts = async (portfolio) => {
+const insertPortfolio = async (portfolio) => {
     const { data, error } = await supabase
         .from(table)
         .insert(portfolio)
 
-    return formatReturnData(error, data);
+    return formatReturnData(error, data, table);
 }
 
 module.exports = {
-    getAccounts,
-    insertAccounts
+    getPortfolio,
+    insertPortfolio
 };

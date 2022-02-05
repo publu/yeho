@@ -10,7 +10,7 @@ const getUserById = async (id) => {
     .select()
     .eq('id', id);
 
-  return await formatReturnData(error, data);
+  return await formatReturnData(error, data, table);
 }
 
 

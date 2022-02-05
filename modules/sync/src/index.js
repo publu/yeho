@@ -1,11 +1,15 @@
-const { insertAccounts } = require('./data/Accounts');
 const { getPortfolio } = require('./api/index');
+
+const { insertPortfolio } = require('./data/Portfolio');
+const { insertTotalPortfolio } = require('./data/TotalPortfolio');
 const { formatPortfolio } = require('./helpers/data-helpers');
 
 async function app(user_id = 1) {
-    let sync_time = Math.floor(new Date().getTime() / 1000.0); //serves as sync lot number for storage
 
-    // preparing data to fetch portfolio
+    //serves as sync lot number for storage
+    let sync_time = Math.floor(new Date().getTime() / 1000.0);
+
+    // preparing tokens/config to fetch portfolio
     const data = require('./test-data');
     const {
         keys,
@@ -25,8 +29,8 @@ async function app(user_id = 1) {
     let formattedPortfolio = await formatPortfolio(user_id, sync_time, portfolio);
 
     //bulk insert portfolio data to database
-    let result = await insertAccounts(formattedPortfolio);
-    console.log(result);
+    await insertPortfolio(formattedPortfolio.portfolio);
+    await insertTotalPortfolio(formattedPortfolio.total);
 }
 
 app();
