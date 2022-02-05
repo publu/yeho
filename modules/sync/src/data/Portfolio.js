@@ -32,7 +32,23 @@ const insertPortfolio = async (portfolio) => {
     return formatReturnData(error, data, table);
 }
 
+/**
+ * Revert portfolio sync by clearing stored data.
+ * @param {number} user_id
+ * @param {number} sync_time Timestamp of current sync start time
+ * @returns {json}
+ */
+const revertPortfolioSync = (user_id, sync_time) => {
+    const { data, error } = await supabase
+        .from(table)
+        .delete()
+        .match({ user_id: user_id, sync_time: sync_time })
+
+    return formatReturnData(error, data, table);
+}
+
 module.exports = {
     getPortfolio,
-    insertPortfolio
+    insertPortfolio,
+    revertPortfolioSync,
 };
