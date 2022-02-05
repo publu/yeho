@@ -38,7 +38,7 @@ const insertTotalPortfolio = async (totalPortfolio) => {
  * @param {number} sync_time Timestamp of current sync start time
  * @returns {json}
  */
-const revertTotalPortfolioSync = (user_id, sync_time) => {
+const revertTotalPortfolioSync = async (user_id, sync_time) => {
     const { data, error } = await supabase
         .from(table)
         .delete()
