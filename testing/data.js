@@ -1,5 +1,5 @@
 module.exports = {
-  keys: {
+ /*  keys: {
     ftx: {
       apiKey: 'MRf5dhznpUsqo6YAOyE6GqL5seFqiCBC-KOS1MRZ',
       secret: 'JO_CUEpoELcmHS2CwOGEzfT4HwYmw8FEx_xAAkZ-',
@@ -12,7 +12,7 @@ module.exports = {
       apiKey: "QZ+zKps0EK9aXHd15OwnmfFORGOKXD8o8JMWpaHNhZICFkHKuiD3b+wt",
       secret: "A+kzzhEsmtdu6Aukq8LcWwRCdLTe3sTwRU7uEm5cd3aSF8IiQXB2MdGgdTZlvh/YPAIiNUXnC5zaq1Te6RwDDg=="
     }
-  },
+  }, */
 
   addresses: [
     '0xbc8d100e2c7c1d6bbefc3128bd5185d226a1976a',

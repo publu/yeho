@@ -6,6 +6,21 @@ const formatReturnData = async (error, data, table) => {
     return { data: data, error: false, message: null, table: table };
 }
 
+
+const formatPortfolioSnapshot = async (user_id, sync_time, portfolio) => {
+    try {
+        let formattedPortfolioSnapshot = {};
+
+        formattedPortfolioSnapshot.user_id = user_id;
+        formattedPortfolioSnapshot.sync_time = sync_time;
+        formattedPortfolioSnapshot.portfolio = portfolio;
+        
+        return formattedPortfolioSnapshot;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 /**
  * Prepare portfolio to store to database.
  * Portfolio table needs user_id, wallet_address, sync_time, portfolio_data, wallet_total
@@ -50,5 +65,6 @@ const formatPortfolio = async (user_id, sync_time, portfolio) => {
 
 module.exports = {
     formatPortfolio,
+    formatPortfolioSnapshot,
     formatReturnData,
 };
