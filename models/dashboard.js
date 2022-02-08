@@ -51,6 +51,7 @@ const getPortfolio = async (user_id) => {
         const { data, error } = await supabase
             .from(table)
             .select()
+            .eq('user_id', user_id)
             .eq('sync_time', sync_time)
 
         if (error) {
@@ -76,12 +77,12 @@ const getPortfolioTotal = async (user_id) => {
 
         const table = 'QFG.TotalPortfolio';
 
-        //get the UTC day start time for supplied timezone
         const sync_time = await getLastSyncTimestamp(user_id);
 
         const { data, error } = await supabase
             .from(table)
             .select()
+            .eq('user_id', user_id)
             .eq('sync_time', sync_time)
 
         if (error) {
@@ -95,7 +96,48 @@ const getPortfolioTotal = async (user_id) => {
 }
 
 /**
- * Get last sync tmestamp
+ * Get the latest portfolio snapshot from database
+ * @param {int} user_id
+ * @returns json
+ */
+const getPortfolioSnapshot = async (user_id, getFirstSnapshotOfDay = false ) => {
+    try {
+        if (!user_id) {
+            throw new Error('UserId not suppiled');
+        }
+
+        const table = 'QFG.PortfolioSnapshot';
+        const sync_time = await getLastSyncTimestamp(user_id);
+
+        let query =  supabase
+            .from(table)
+            .select('portfolio, sync_time')
+            .eq('user_id', user_id)
+
+
+        if (!getFirstSnapshotOfDay) {
+            query = query.eq('sync_time', sync_time)
+        } else  {
+            let startOfDay = sync_time - (sync_time % 86400);
+            query = query.gte('sync_time', startOfDay)
+                .lt('sync_time', sync_time)
+                .order('id', { ascending: true })
+                .limit(1)
+        }
+
+        const { data, error } = await query
+
+        if (error) {
+            throw new Error('Error getting portfolio from database.');
+        }
+        return data[0];
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+/**
+ * Get last sync timestamp
  * @param {int} user_id
  * @returns int
  */
@@ -126,6 +168,7 @@ const getLastSyncTimestamp = async (user_id) => {
 
 module.exports = {
     // getTotalDailyPNL,
+    getPortfolioSnapshot,
     getPortfolio,
     getPortfolioTotal,
 

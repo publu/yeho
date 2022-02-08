@@ -1,4 +1,4 @@
-const { getPortfolio, getPortfolioTotal } = require('../models/dashboard');
+const { getPortfolioSnapshot } = require('../models/dashboard');
 
 const getOverview = async (user_id) => {
     try {
@@ -6,17 +6,24 @@ const getOverview = async (user_id) => {
             throw new Error('UserId not suppiled');
         }
 
-        let portfolio = await getPortfolio(user_id);
-        let portfolioTotal = await getPortfolioTotal(user_id);
-        
-        let totalBalanceUSD = portfolioTotal[0].total.USD;
-        let totalBalanceFTM = portfolioTotal[0].total.FTM;
-        console.log(totalBalanceUSD);
-        console.log(totalBalanceFTM);
+        let portfolioSnapshot = await getPortfolioSnapshot(user_id);
+        let firstPortfolioSnapshotOfDay = await getPortfolioSnapshot(user_id, true);
 
+        return [portfolioSnapshot,  firstPortfolioSnapshotOfDay];
+    } catch (e) {
+        console.error(e);
+    }
+}
 
+const getLatestSnapshot = async (user_id) => {
+    try {
+        if (!user_id) {
+            throw new Error('UserId not suppiled');
+        }
 
+        let portfolioSnapshot = await getPortfolioSnapshot(user_id);
 
+        return [portfolioSnapshot];
     } catch (e) {
         console.error(e);
     }
@@ -24,4 +31,5 @@ const getOverview = async (user_id) => {
 
 module.exports = {
     getOverview,
+    getLatestSnapshot,
 }
