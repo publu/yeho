@@ -148,11 +148,13 @@ const getAllPortfolioSnapshot = async (user_id) => {
         }
 
         const table = 'QFG.PortfolioSnapshot';
+        const sync_time = await getLastSyncTimestamp(user_id);
 
         const { data, error } = await supabase
             .from(table)
             .select('snapshot, timestamp')
             .eq('user_id', user_id)
+            .not('timestamp', 'eq', sync_time)
 
         if (error) {
             throw new Error('Error getting portfolio from database.');
