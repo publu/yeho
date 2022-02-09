@@ -42,7 +42,7 @@ const revertPortfolioSnapshotSync = async (user_id, sync_time) => {
     const { data, error } = await supabase
         .from(table)
         .delete()
-        .match({ user_id: user_id, sync_time: sync_time })
+        .match({ user_id: user_id, timestamp: sync_time })
 
     return formatReturnData(error, data, table);
 }

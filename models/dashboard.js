@@ -111,16 +111,16 @@ const getPortfolioSnapshot = async (user_id, getFirstSnapshotOfDay = false ) => 
 
         let query =  supabase
             .from(table)
-            .select('portfolio, sync_time')
+            .select('snapshot, timestamp')
             .eq('user_id', user_id)
 
 
         if (!getFirstSnapshotOfDay) {
-            query = query.eq('sync_time', sync_time)
+            query = query.eq('timestamp', sync_time)
         } else  {
             let startOfDay = sync_time - (sync_time % 86400);
-            query = query.gte('sync_time', startOfDay)
-                .lt('sync_time', sync_time)
+            query = query.gte('timestamp', startOfDay)
+                .lt('timestamp', sync_time)
                 .order('id', { ascending: true })
                 .limit(1)
         }
@@ -131,6 +131,34 @@ const getPortfolioSnapshot = async (user_id, getFirstSnapshotOfDay = false ) => 
             throw new Error('Error getting portfolio from database.');
         }
         return data[0];
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+/**
+ * Get the all portfolio snapshot from database
+ * @param {int} user_id
+ * @returns json
+ */
+const getAllPortfolioSnapshot = async (user_id) => {
+    try {
+        if (!user_id) {
+            throw new Error('UserId not suppiled');
+        }
+
+        const table = 'QFG.PortfolioSnapshot';
+
+        const { data, error } = await supabase
+            .from(table)
+            .select('snapshot, timestamp')
+            .eq('user_id', user_id)
+
+        if (error) {
+            throw new Error('Error getting portfolio from database.');
+        }
+
+        return data;
     } catch (e) {
         console.log(e);
     }
@@ -168,6 +196,7 @@ const getLastSyncTimestamp = async (user_id) => {
 
 module.exports = {
     // getTotalDailyPNL,
+    getAllPortfolioSnapshot,
     getPortfolioSnapshot,
     getPortfolio,
     getPortfolioTotal,

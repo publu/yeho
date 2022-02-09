@@ -9,5 +9,5 @@ export default async function handler(req, res) {
 
   let portfolio = await getOverview(user_id);
 
-  res.status(200).json({ portfolio: portfolio })
+  res.status(200).json(portfolio)
 }

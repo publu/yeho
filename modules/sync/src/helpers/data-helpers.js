@@ -12,8 +12,8 @@ const formatPortfolioSnapshot = async (user_id, sync_time, portfolio) => {
         let formattedPortfolioSnapshot = {};
 
         formattedPortfolioSnapshot.user_id = user_id;
-        formattedPortfolioSnapshot.sync_time = sync_time;
-        formattedPortfolioSnapshot.portfolio = portfolio;
+        formattedPortfolioSnapshot.timestamp = sync_time;
+        formattedPortfolioSnapshot.snapshot = [portfolio];
         
         return formattedPortfolioSnapshot;
     } catch (e) {

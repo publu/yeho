@@ -9,5 +9,5 @@ export default async function handler(req, res) {
 
   let portfolio = await getLatestSnapshot(user_id);
 
-  res.status(200).json(portfolio[0])
+  res.status(200).json(portfolio)
 }

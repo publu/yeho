@@ -1,4 +1,4 @@
-const { getPortfolioSnapshot } = require('../models/dashboard');
+const { getAllPortfolioSnapshot, getPortfolioSnapshot } = require('../models/dashboard');
 
 const getOverview = async (user_id) => {
     try {
@@ -6,10 +6,9 @@ const getOverview = async (user_id) => {
             throw new Error('UserId not suppiled');
         }
 
-        let portfolioSnapshot = await getPortfolioSnapshot(user_id);
-        let firstPortfolioSnapshotOfDay = await getPortfolioSnapshot(user_id, true);
+        let portfolioSnapshot = await getAllPortfolioSnapshot(user_id);
 
-        return [portfolioSnapshot,  firstPortfolioSnapshotOfDay];
+        return portfolioSnapshot;
     } catch (e) {
         console.error(e);
     }
