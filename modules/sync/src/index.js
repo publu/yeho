@@ -4,7 +4,7 @@ const { insertPortfolioSnapshot } = require('./data/PortfolioSnapshot');
 const { updateLastSyncTime } = require('./data/Users');
 const { formatPortfolioSnapshot } = require('./helpers/data-helpers');
 
-async function app(user_id = 1) {
+async function app(user_id = 'be5f11fd-ca4a-485b-b0f5-6160c3586f48') {
     try {
         //serves as sync lot number for storage
         let sync_time = new Date().getTime();
