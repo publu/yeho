@@ -7,7 +7,6 @@ const getClients = async (user_id) => {
         }
 
         let clients = await getAllClients(user_id);
-        console.log(clients);
         return clients;
     } catch (e) {
         console.error(e);
