@@ -1,34 +1,34 @@
-const { getAllAccounts, createAccount, removeAccounts } = require('../models/accounts');
+const { getAllClients, createClient, removeClients } = require('../models/clients');
 
-const getAccounts = async (user_id) => {
+const getClients = async (user_id) => {
     try {
         if (!user_id) {
             throw new Error('UserId not suppiled');
         }
 
-        let accounts = await getAllAccounts(user_id);
-        
-        return accounts;
+        let clients = await getAllClients(user_id);
+        console.log(clients);
+        return clients;
     } catch (e) {
         console.error(e);
     }
 }
 
-const saveAccount = async (user_id, data) => {
+const saveClient = async (user_id, client_data) => {
     try {
         if (!user_id) {
             throw new Error('UserId not suppiled');
         }
 
-        let accounts = await createAccount(user_id, data);
+        let clients = await createClient(user_id, client_data);
         
-        return accounts;
+        return clients;
     } catch (e) {
         console.error(e);
     }
 }
 
-const deleteAccounts = async (user_id, account_ids) => {
+const deleteClients = async (user_id, account_ids) => {
     try {
         if (!user_id) {
             throw new Error('UserId not suppiled');
@@ -38,7 +38,7 @@ const deleteAccounts = async (user_id, account_ids) => {
             throw new Error('Account ids not suppiled');
         }
         
-        let accounts = await removeAccounts(user_id, account_ids);
+        let accounts = await removeClients(user_id, account_ids);
         
         return accounts;
     } catch (e) {
@@ -47,7 +47,7 @@ const deleteAccounts = async (user_id, account_ids) => {
 }
 
 module.exports = {
-    saveAccount,
-    getAccounts,
-    deleteAccounts
+    saveClient,
+    getClients,
+    deleteClients
 }
