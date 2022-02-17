@@ -7,17 +7,14 @@ export default async function handler(req, res) {
     let user_id = headers['user-id'];
 
     if (!token || !user_id) { // preflight check needs 200 OK
-        res.status(200);
+        return res.status(200).send('OK');
     }
 
     if (!isUserAuthorized(token, user_id)) {
-        res.status(401);
+        return res.status(401).send('Not Authorized.');
     }
-
+    
     let account_data = req.body.ids;
-    if (!account_data) {
-        throw new Error('account_data not suppiled');
-    }
 
     let accounts = await deleteAccounts(user_id, account_data);
     res.status(200).json(accounts);

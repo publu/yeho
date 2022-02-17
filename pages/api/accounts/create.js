@@ -7,19 +7,15 @@ export default async function handler(req, res) {
     let user_id = headers['user-id'];
 
     if (!token || !user_id) { // preflight check needs 200 OK
-        res.status(200);
+        return res.status(200).send('OK');
     }
 
     if (!isUserAuthorized(token, user_id)) {
-        res.status(401);
+        return res.status(401).send('Not authorized');
     }
 
     let request = req.body;
     let data = {};
-
-    if (!request.account_type || request.nickname) {
-        throw new Error('Account type and name not supplied not supplied');
-    }
 
     data.user_id = user_id;
     data.account_type = request.account_type;
