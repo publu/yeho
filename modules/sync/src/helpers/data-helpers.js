@@ -6,6 +6,32 @@ const formatReturnData = async (error, data, table) => {
     return { data: data, error: false, message: null, table: table };
 }
 
+const formatAccountData = async (error, data, table) => {
+    if (error) {
+        return null;
+    }
+
+    let addresses = [];
+    let keys = {};
+
+    data.forEach((datum) => {
+        if ('defi' === datum.account_type) {
+            addresses.push(datum.wallet_address);
+        } else if ('cefi' === datum.account_type) {
+            let cefi_account_provider = datum.cefi_account_provider;
+            keys[cefi_account_provider] = {};
+
+            keys[cefi_account_provider]['apiKey'] = datum.api_key;
+            keys[cefi_account_provider]['secret'] = datum.api_secret;
+        }
+    })
+
+    return {
+        keys: keys,
+        addresses: addresses
+    }
+}
+
 
 const formatPortfolioSnapshot = async (user_id, sync_time, portfolio) => {
     try {
@@ -14,7 +40,7 @@ const formatPortfolioSnapshot = async (user_id, sync_time, portfolio) => {
         formattedPortfolioSnapshot.user_id = user_id;
         formattedPortfolioSnapshot.timestamp = sync_time;
         formattedPortfolioSnapshot.snapshot = [portfolio];
-        
+
         return formattedPortfolioSnapshot;
     } catch (e) {
         console.log(e);
@@ -67,4 +93,5 @@ module.exports = {
     formatPortfolio,
     formatPortfolioSnapshot,
     formatReturnData,
+    formatAccountData,
 };

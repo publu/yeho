@@ -3,6 +3,7 @@ const { getPortfolio } = require('./api/index');
 const { insertPortfolioSnapshot } = require('./data/PortfolioSnapshot');
 const { updateLastSyncTime } = require('./data/Users');
 const { formatPortfolioSnapshot } = require('./helpers/data-helpers');
+const { getAccounts } = require('./data/Account');
 
 async function app(user_id = 'be5f11fd-ca4a-485b-b0f5-6160c3586f48') {
     try {
@@ -10,7 +11,12 @@ async function app(user_id = 'be5f11fd-ca4a-485b-b0f5-6160c3586f48') {
         let sync_time = new Date().getTime();
 
         // preparing tokens/config to fetch portfolio
-        const data = require('./test-data');
+        const data = await getAccounts(user_id);
+
+        if (!data) {
+            throw new Error('Wallet account data not found');
+        }
+
         const {
             keys,
             othertokens,
@@ -35,7 +41,7 @@ async function app(user_id = 'be5f11fd-ca4a-485b-b0f5-6160c3586f48') {
         let portfolioSnapshotInsertResult = await insertPortfolioSnapshot(formattedPortfolioSnapshot);
 
         //Commit sync if no error found
-        if ( !portfolioSnapshotInsertResult.error) {
+        if (!portfolioSnapshotInsertResult.error) {
             await updateLastSyncTime(user_id, sync_time);
         }
         // else {
