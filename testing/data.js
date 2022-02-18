@@ -1,18 +1,18 @@
 module.exports = {
- /*  keys: {
+  keys: {
     ftx: {
       apiKey: 'MRf5dhznpUsqo6YAOyE6GqL5seFqiCBC-KOS1MRZ',
       secret: 'JO_CUEpoELcmHS2CwOGEzfT4HwYmw8FEx_xAAkZ-',
     },
     binance: {
-      apiKey: "xRET5ZFGWFwBhKNIJeCiZNc9tnlZoEytJ2YTFuUt5UBojxfvlwcX6SjM1VBlCj3G.",
-      secret: "xYqo6mQEYyT4av4bs7YAIJz5xDF8Tu1eFA5q1ZjPlrvbG6WbPo9g1zxMDZ9y1Jyh"
+      apiKey: "9gcYJjQtcxf4Xy6xFL3se2WZYbMXRPAKZWUA8a8q6lxFwkKUV9QbVn6JMRuafrwH",
+      secret: "Gf9dADq42RvoIAmtRWuvHDjRK79S4lW8TZr0peI1zOlALV5TjrHj3eNGNTd2FtGm"
     },
-    kraken: {
+    /* kraken: {
       apiKey: "QZ+zKps0EK9aXHd15OwnmfFORGOKXD8o8JMWpaHNhZICFkHKuiD3b+wt",
       secret: "A+kzzhEsmtdu6Aukq8LcWwRCdLTe3sTwRU7uEm5cd3aSF8IiQXB2MdGgdTZlvh/YPAIiNUXnC5zaq1Te6RwDDg=="
-    }
-  }, */
+    } */
+  },
 
   addresses: [
     '0xbc8d100e2c7c1d6bbefc3128bd5185d226a1976a',
