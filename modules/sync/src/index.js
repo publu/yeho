@@ -5,7 +5,7 @@ const { updateLastSyncTime } = require('./data/Users');
 const { formatPortfolioSnapshot } = require('./helpers/data-helpers');
 const { getAccounts } = require('./data/Account');
 
-async function app(user_id = '3d4d32d5-1ee7-458e-aae9-ed31bd900654') {
+async function app(user_id = 'be5f11fd-ca4a-485b-b0f5-6160c3586f48') {
     try {
         //serves as sync lot number for storage
         let sync_time = new Date().getTime();
