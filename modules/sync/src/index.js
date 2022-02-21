@@ -1,4 +1,4 @@
-const { getPortfolio } = require('./api/index');
+const { getPortfolio,fetchers } = require('./api/index');
 
 const { insertPortfolioSnapshot } = require('./data/PortfolioSnapshot');
 const { updateLastSyncTime } = require('./data/Users');
@@ -22,13 +22,24 @@ async function app(user_id = 'be5f11fd-ca4a-485b-b0f5-6160c3586f48') {
             othertokens,
             addresses,
         } = data;
-        let combineExchanges = true;
+        let combineExchanges = false;
+
+        const {
+            fetchBinanceContractBalances,
+            fetchFTXContractBalances,
+          } = fetchers;
+
+          const extraFetchers = {
+            binance: fetchBinanceContractBalances,
+            ftx: fetchFTXContractBalances,
+          };
 
         let portfolio = await getPortfolio({
             keys,
             addresses,
             othertokens,
             combineExchanges,
+            extraFetchers
         });
 
         //get prepared portfolio data for insertion
