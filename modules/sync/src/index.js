@@ -1,14 +1,15 @@
-const { getPortfolio,fetchers } = require('./api/index');
+const { getPortfolio, fetchers } = require('./api/index');
 
 const { insertPortfolioSnapshot } = require('./data/PortfolioSnapshot');
 const { updateLastSyncTime } = require('./data/Users');
 const { formatPortfolioSnapshot } = require('./helpers/data-helpers');
 const { getAccounts } = require('./data/Account');
 
-async function app(user_id = 'be5f11fd-ca4a-485b-b0f5-6160c3586f48') {
+async function sync(user_id) {
     try {
-        //serves as sync lot number for storage
-        let sync_time = new Date().getTime();
+        if (!user_id) {
+            throw new Error('User id not found');
+        }
 
         // preparing tokens/config to fetch portfolio
         const data = await getAccounts(user_id);
@@ -16,6 +17,9 @@ async function app(user_id = 'be5f11fd-ca4a-485b-b0f5-6160c3586f48') {
         if (!data) {
             throw new Error('Wallet account data not found');
         }
+
+        //serves as sync lot number for storage
+        let sync_time = new Date().getTime();
 
         const {
             keys,
@@ -27,12 +31,12 @@ async function app(user_id = 'be5f11fd-ca4a-485b-b0f5-6160c3586f48') {
         const {
             fetchBinanceContractBalances,
             fetchFTXContractBalances,
-          } = fetchers;
+        } = fetchers;
 
-          const extraFetchers = {
+        const extraFetchers = {
             binance: fetchBinanceContractBalances,
             ftx: fetchFTXContractBalances,
-          };
+        };
 
         let portfolio = await getPortfolio({
             keys,
@@ -59,11 +63,11 @@ async function app(user_id = 'be5f11fd-ca4a-485b-b0f5-6160c3586f48') {
         //     await revertPortfolioSnapshotSync(user_id, sync_time);
         // }
 
-
-
     } catch (e) {
         console.error(e);
     }
 }
 
-app();
+module.exports = {
+    sync
+}
