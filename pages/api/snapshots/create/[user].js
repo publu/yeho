@@ -1,7 +1,5 @@
 const { isWalletAvailable } = require("../../../../helpers/wallet");
 const {
-  isUserAuthorized,
-  doesUserExist,
   getUserIdFromEmail,
 } = require("../../../../helpers/user-auh");
 

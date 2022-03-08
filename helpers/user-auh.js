@@ -44,7 +44,7 @@ const getUserIdFromEmail = async (email) => {
 };
 
 const isUserSuperAdmin = async (token, user_id) => {
-  if (!isUserAuthorized(token, user_id)) {
+  if (!await isUserAuthorized(token, user_id)) {
     return false;
   }
 
@@ -57,7 +57,6 @@ const isUserSuperAdmin = async (token, user_id) => {
   if (error) {
     return false;
   }
-
   if (data.length > 0 && 'super_admin' === data[0].role) {
     return true;
   }
