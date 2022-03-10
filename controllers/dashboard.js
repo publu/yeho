@@ -26,7 +26,7 @@ const getLatestSnapshot = async (user_id) => {
     } catch (e) {
         console.error(e);
     }
-}
+} 
 
 module.exports = {
     getOverview,
