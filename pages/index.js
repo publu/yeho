@@ -11,7 +11,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      {/* <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to Yeeho
         </h1>
@@ -109,7 +109,7 @@ $$$  eth  0x9dcc35ae915926f7f5e8c624254d91f755d55b71 tokens  $$$
             ]
           }`}
         </code>
-      </main>
+      </main> */}
 
       <footer className={styles.footer}>
         <a
