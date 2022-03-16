@@ -47,6 +47,10 @@ const getPortfolio = async (user_id) => {
         //get the UTC day start time for supplied timezone
         const sync_time = await getLastSyncTimestamp(user_id);
 
+        if(!sync_time) {
+          return [];
+        }
+
         const { data, error } = await supabase
             .from(table)
             .select()
@@ -54,7 +58,7 @@ const getPortfolio = async (user_id) => {
             .eq('sync_time', sync_time)
 
         if (error) {
-            throw new Error('Error getting portfolio from database.');
+            throw new Error('Error getting portfolio from database.' + error.message);
         }
 
         return data;
@@ -108,6 +112,10 @@ const getPortfolioSnapshot = async (user_id, getFirstSnapshotOfDay = false) => {
         const table = 'QFG.PortfolioSnapshot';
         const sync_time = await getLastSyncTimestamp(user_id);
 
+        if(!sync_time) {
+          return [];
+        }
+
         let query = supabase
             .from(table)
             .select('snapshot, timestamp')
@@ -149,6 +157,10 @@ const getAllPortfolioSnapshot = async (user_id, filter = false) => {
         const table = 'QFG.PortfolioSnapshot';
         const sync_time = await getLastSyncTimestamp(user_id);
 
+        if(!sync_time) {
+          return [];
+        }
+
         let query = supabase
             .from(table)
             .select('snapshot, timestamp')
@@ -162,7 +174,7 @@ const getAllPortfolioSnapshot = async (user_id, filter = false) => {
         const { data, error } = await query
 
         if (error) {
-            throw new Error('Error getting portfolio from database.');
+            throw new Error('Error getting portfolio from database. ' + error.message );
         }
         console.log(data);
         return data;
