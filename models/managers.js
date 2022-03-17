@@ -50,7 +50,46 @@ const getManagedFunds = async (user_id, last_sync_time) => {
   }
 }
 
+const deleteManager = async (user_id) => {
+  let table = 'QFG.Users';
+  try {
+    const { data, error } = await supabase
+      .from(table)
+      .delete()
+      .match({ id: user_id })
+
+    if (error) {
+      throw new Error('Error deleting user from database. ' + error.message);
+    }
+
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+const changeManagerStatus = async (user_id, status) => {
+  let table = 'QFG.Users';
+  try {
+
+    const { data, error } = await supabase
+      .from(table)
+      .update({ status: status })
+      .match({ id: user_id })
+
+    if (error) {
+      throw new Error('Error deleting user from database. ' + error.message);
+    }
+
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = {
   getAllManagers,
-  getManagedFunds
+  getManagedFunds,
+  deleteManager,
+  changeManagerStatus
 }
