@@ -4,5 +4,5 @@ exports.databaseConfig = {
 }
 
 exports.syncConfig = {
-    SYNC_INTERVAL_MINUTES: 5,
+    SYNC_INTERVAL_MINUTES: 12 * 60,
 }
