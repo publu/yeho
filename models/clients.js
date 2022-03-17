@@ -9,24 +9,24 @@ const table = 'QFG.Clients';
  * @returns json
  */
 const getAllClients = async (user_id) => {
-    try {
-        if (!user_id) {
-            throw new Error('UserId not suppiled');
-        }
-
-        const { data, error } = await supabase
-            .from(table)
-            .select()
-            .eq('user_id', user_id)
-
-        if (error) {
-            throw new Error('Error getting accounts from database.');
-        }
-        
-        return data;
-    } catch (e) {
-        console.log(e);
+  try {
+    if (!user_id) {
+      throw new Error('UserId not suppiled');
     }
+
+    const { data, error } = await supabase
+      .from(table)
+      .select()
+      .eq('user_id', user_id)
+
+    if (error) {
+      throw new Error('Error getting accounts from database.');
+    }
+
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 
@@ -37,25 +37,25 @@ const getAllClients = async (user_id) => {
  * @returns json
  */
 const createClient = async (user_id, client_data) => {
-    try {
-        if (!user_id) {
-            throw new Error('UserId not suppiled');
-        }
-
-        const { data, error } = await supabase
-            .from(table)
-            .insert([
-                client_data
-            ])
-
-        if (error) {
-            throw new Error('Error getting accounts from database.');
-        }
-
-        return data;
-    } catch (e) {
-        console.log(e);
+  try {
+    if (!user_id) {
+      throw new Error('UserId not suppiled');
     }
+
+    const { data, error } = await supabase
+      .from(table)
+      .insert([
+        client_data
+      ])
+
+    if (error) {
+      throw new Error('Error getting accounts from database.');
+    }
+
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 /**
@@ -65,26 +65,48 @@ const createClient = async (user_id, client_data) => {
  * @returns json
  */
 const removeClients = async (user_id, wallet_data) => {
-    try {
-        if (!user_id) {
-            throw new Error('UserId not suppiled');
-        }
-
-        for (const key in wallet_data) {
-            await supabase
-                .from(table)
-                .delete()
-                .match({ id: wallet_data[key], user_id: user_id })
-        }
-
-        return;
-    } catch (e) {
-        console.log(e);
+  try {
+    if (!user_id) {
+      throw new Error('UserId not suppiled');
     }
+
+    for (const key in wallet_data) {
+      await supabase
+        .from(table)
+        .delete()
+        .match({ id: wallet_data[key], user_id: user_id })
+    }
+
+    return;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+const removeAllClients = async (user_id) => {
+  try {
+    if (!user_id) {
+      throw new Error('UserId not suppiled');
+    }
+
+    const { data, error } = await supabase
+      .from(table)
+      .delete()
+      .match({ user_id: user_id })
+
+    if (error) {
+      throw new Error('Error getting portfolio from database. ' + error.message);
+    }
+
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 module.exports = {
-    getAllClients,
-    createClient,
-    removeClients
+  getAllClients,
+  createClient,
+  removeClients,
+  removeAllClients
 }
