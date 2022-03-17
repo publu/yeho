@@ -25,16 +25,16 @@ export default async function handler(req, res) {
       user_id = queueItem[0].user_id;
       console.log('Running sync from queue');
       console.log(queueItem);
-      markQueueElementAsProcessing(user_id);
-      sync(user_id);
-      removeElementFromSyncQueue(user_id);
+      await markQueueElementAsProcessing(user_id);
+      await sync(user_id);
+      await removeElementFromSyncQueue(user_id);
     } else {
       console.log('No queue item found');
     }
   } catch (e) {
     console.log(e);
   } finally {
-    removeElementFromSyncQueue(user_id);
+    await removeElementFromSyncQueue(user_id);
   }
 
   res.status(200).json('OK');
