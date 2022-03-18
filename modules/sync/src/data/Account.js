@@ -11,14 +11,24 @@ const table = 'QFG.Wallet';
  * @returns json
  */
 const getAccounts = async (user_id) => {
-    const { data, error } = await supabase
-        .from(table)
-        .select()
-        .eq('user_id', user_id)
+  const { data, error } = await supabase
+    .from(table)
+    .select()
+    .eq('user_id', user_id)
 
-    return formatAccountData(error, data, table);
+  return formatAccountData(error, data, table);
+}
+
+const getAccountsCount = async (user_id) => {
+  const { count } = await supabase
+    .from(table)
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', user_id)
+
+  return count;
 }
 
 module.exports = {
-    getAccounts
+  getAccounts,
+  getAccountsCount
 }
