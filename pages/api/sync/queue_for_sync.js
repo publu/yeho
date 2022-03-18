@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    await insertEligibleUsersToSyncQueue();
+    insertEligibleUsersToSyncQueue();
   } catch (e) {
     console.log(e);
   }

@@ -15,7 +15,8 @@ async function sync(user_id) {
         const data = await getAccounts(user_id);
 
         if (!data) {
-            throw new Error('Wallet account data not found');
+            console.error('Wallet account data not found');
+            return;
         }
 
         //serves as sync lot number for storage
