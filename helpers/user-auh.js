@@ -64,9 +64,31 @@ const isUserSuperAdmin = async (token, user_id) => {
   return false;
 }
 
+const getUser = async (token, user_id) => {
+  if (!await isUserAuthorized(token, user_id)) {
+    return false;
+  }
+
+  const table = "QFG.Users";
+  const { data, error } = await supabase
+    .from(table)
+    .select()
+    .eq("id", user_id);
+
+  if (error) {
+    return false;
+  }
+  if (data.length > 0) {
+    return data[0];
+  }
+
+  return false;
+}
+
 module.exports = {
   isUserAuthorized,
   doesUserExist,
   getUserIdFromEmail,
-  isUserSuperAdmin
+  isUserSuperAdmin,
+  getUser
 };

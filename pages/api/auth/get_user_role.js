@@ -1,4 +1,4 @@
-const { isUserAuthorized, isUserSuperAdmin } = require('../../../helpers/user-auh');
+const { isUserAuthorized, isUserSuperAdmin, getUser } = require('../../../helpers/user-auh');
 
 export default async function handler(req, res) {
   let headers = req.headers;
@@ -13,10 +13,11 @@ export default async function handler(req, res) {
     return res.status(401).send('Not authorized');
   }
 
-  let role = { role: 'authenticated' };
+  let role = { role: 'authenticated', status: true };
 
-  if (await isUserSuperAdmin(token, user_id)) {
-    role = { role: 'super_admin' };
+  let user = await getUser(token, user_id);
+  if (user) {
+    role = { role: user.role, status: user.status };
   }
 
   res.status(200).json(role);
