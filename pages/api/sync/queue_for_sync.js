@@ -13,11 +13,12 @@ export default async function handler(req, res) {
     return res.status(401).send('Unauthorized');
   }
 
+  let data = {};
   try {
-    insertEligibleUsersToSyncQueue();
+    data = await insertEligibleUsersToSyncQueue();
   } catch (e) {
     console.log(e);
   }
 
-  res.status(200).json('OK');
+  res.status(200).json(data);
 }
