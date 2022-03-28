@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   let secret = process.env.CRONJOB_SECRET;
 
   if (!tokenHeader || !secretHeader || tokenHeader !== token || secretHeader !== secret) {
-    return res.status(401).send('Unauthorized');
+    throw new Error('Unauthorized for queueing for sync');
   }
 
   let data = {};

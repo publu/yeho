@@ -68,75 +68,35 @@ const getPortfolio = async ({
   });
 
   progressBar.startItem('fetching exchange token counts ...')
-  const exchangeTokenCounts =
-    await getExchangeTokenCounts(keys, extraFetchers, combineExchanges)
-      .catch((err) => {
-        console.log(err);
-      });
+  const exchangeTokenCounts = await getExchangeTokenCounts(keys, extraFetchers, combineExchanges);
   progressBar.update(another() / count);
 
   progressBar.startItem('fetching Eth Tokens ...');
-  const [ethTokenCounts, ethTokenPrices] =
-    await getProtocolCounts(addresses, "eth", combineAddresses)
-      .catch((err) => {
-        console.log(err);
-      });
+  const [ethTokenCounts, ethTokenPrices] = await getProtocolCounts(addresses, "eth", combineAddresses);
   progressBar.update(another() / count);
 
   progressBar.startItem('fetching BSC Tokens ...');
-  const [bscTokenCounts, bscTokenPrices] =
-    await getProtocolCounts(addresses, "bsc", combineAddresses)
-      .catch((err) => {
-        console.log(err);
-      });
+  const [bscTokenCounts, bscTokenPrices] = await getProtocolCounts(addresses, "bsc", combineAddresses);
   progressBar.update(another() / count);
 
   progressBar.startItem('fetching Polygon Tokens counts ...');
-  const [maticTokenCounts, maticTokenPrices] =
-    await getProtocolCounts(addresses, "matic", combineAddresses)
-      .catch((err) => {
-        console.log(err);
-      });
+  const [maticTokenCounts, maticTokenPrices] = await getProtocolCounts(addresses, "matic", combineAddresses);
   progressBar.update(another() / count);
 
   progressBar.startItem('fetching Fantom Tokens counts ...');
-  const [fantomTokenCounts, fantomTokenPrices] =
-    await getProtocolCounts(addresses, "ftm", combineAddresses)
-      .catch((err) => {
-        console.log(err);
-      });
+  const [fantomTokenCounts, fantomTokenPrices] = await getProtocolCounts(addresses, "ftm", combineAddresses);
   progressBar.update(another() / count);
 
-  const [stakedMaticTokenCounts, stakedMaticTokenPrices] =
-    await getStakedCounts(addresses, "matic", combineAddresses)
-      .catch((err) => {
-        console.log(err);
-      });
+  const [stakedMaticTokenCounts, stakedMaticTokenPrices] = await getStakedCounts(addresses, "matic", combineAddresses);
 
-  const [stakedEthTokenCounts, stakedEthTokenPrices] =
-    await getStakedCounts(addresses, "eth", combineAddresses)
-      .catch((err) => {
-        console.log(err);
-      });
+  const [stakedEthTokenCounts, stakedEthTokenPrices] = await getStakedCounts(addresses, "eth", combineAddresses);
 
-  const [stakedFantomTokenCounts, stakedFantomTokenPrices] =
-    await getStakedCounts(addresses, "ftm", combineAddresses)
-      .catch((err) => {
-        console.log(err);
-      });
+  const [stakedFantomTokenCounts, stakedFantomTokenPrices] = await getStakedCounts(addresses, "ftm", combineAddresses);
 
-  const [stakedBscTokenCounts, stakedBscTokenPrices] =
-    await getStakedCounts(addresses, "bsc", combineAddresses)
-      .catch((err) => {
-        console.log(err);
-      });
+  const [stakedBscTokenCounts, stakedBscTokenPrices] = await getStakedCounts(addresses, "bsc", combineAddresses);
 
   progressBar.startItem('fetching other token counts ...');
-  const otherTokenCounts =
-    sumOtherTokenCounts(othertokens)
-      .catch((err) => {
-        console.log(err);
-      });
+  const otherTokenCounts = sumOtherTokenCounts(othertokens);
 
   let eachTokenCounts = [
     ...exchangeTokenCounts,
@@ -153,12 +113,9 @@ const getPortfolio = async ({
 
   //console.log(eachTokenCounts);
 
-  const allTokenCounts =
-    combineTokenCounts(
-      ...eachTokenCounts.map(([, counts]) => counts),
-    ).catch((err) => {
-      console.log(err);
-    });
+  const allTokenCounts = combineTokenCounts(
+    ...eachTokenCounts.map(([, counts]) => counts)
+  );
 
   eachTokenCounts = [
     ...eachTokenCounts,
@@ -168,13 +125,9 @@ const getPortfolio = async ({
   progressBar.startItem('fetching all token prices ...');
   progressBar.update(another() / count);
 
-  const FTMprice = await getFTMPrice().catch((err) => {
-    console.log(err);
-  });
+  const FTMprice = await getFTMPrice();
 
-  let tokenPrices = await getPrices(Object.keys(allTokenCounts), verbose).catch((err) => {
-    console.log(err);
-  });
+  let tokenPrices = await getPrices(Object.keys(allTokenCounts), verbose);
 
   progressBar.startItem('calculating all token values ...');
   progressBar.update(another() / count);
@@ -194,8 +147,6 @@ const getPortfolio = async ({
   const allTokenValues = eachTokenCounts.map(([name, counts]) => {
     const values = getTokenValues(counts, allTokenPrices, FTMprice);
     return [name, values];
-  }).catch((err) => {
-    console.log(err);
   });
 
   return Object.fromEntries(allTokenValues);

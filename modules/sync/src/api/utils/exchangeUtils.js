@@ -108,7 +108,7 @@ const getExchangeTokenCounts = async (keys, extraFetchers, combineExchanges = fa
     if (fetcher) {
       const extratokenCount = await fetcher(exchange);
 
-      eachTokenCounts.push([String(exchangeName+"-futures"), extratokenCount]);
+      eachTokenCounts.push([String(exchangeName + "-futures"), extratokenCount]);
       allTokenCounts = combineTokenCounts(allTokenCounts, tokenCounts);
 
       // tokenCounts = combineTokenCounts(tokenCounts, extratokenCount);
@@ -119,10 +119,13 @@ const getExchangeTokenCounts = async (keys, extraFetchers, combineExchanges = fa
     eachTokenCounts.push([exchangeName, tokenCounts]);
   });
 
-  await Promise.all(pendings);
+  await Promise.all(pendings).catch((error) => {
+    console.log(error);
+    return [];
+  });
 
   console.log(eachTokenCounts);
-  
+
   return combineExchanges
     ? [['exchange', allTokenCounts]]
     : eachTokenCounts;
