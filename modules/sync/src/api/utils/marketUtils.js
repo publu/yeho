@@ -79,50 +79,66 @@ const getSymbol2Id = async symbols => {
 };
 
 const _getPrices = async (params = {}) => {
-  const {
-    vs_currency = 'usd',
-    ids = '',
-  } = params;
-  const res = await coingeckoClient.coins.markets({ vs_currency, ids });
-
-  return res.data.reduce((memo, cur) => {
+  try {
     const {
-      symbol, current_price: price,
-    } = cur;
+      vs_currency = 'usd',
+      ids = '',
+    } = params;
+    const res = await coingeckoClient.coins.markets({ vs_currency, ids });
 
-    return {
-      ...memo,
-      [symbol]: price,
-    };
-  }, {});
+    return res.data.reduce((memo, cur) => {
+      const {
+        symbol, current_price: price,
+      } = cur;
+
+      return {
+        ...memo,
+        [symbol]: price,
+      };
+    }, {});
+  } catch (error) {
+    console.log(error);
+  }
+  return {};
 };
 
 const getPrices = async (symbols, verbose = true) => {
-  const symbol2Id = await getSymbol2Id(symbols);
-  const ids = [];
-  const notSupported = {};
+  try {
+    const symbol2Id = await getSymbol2Id(symbols);
+    const ids = [];
+    const notSupported = {};
 
-  symbols.forEach(c => {
-    const id = symbol2Id[sanitizetokenName(c)];
-    if (id) {
-      ids.push(id);
-    }
-  });
+    symbols.forEach(c => {
+      const id = symbol2Id[sanitizetokenName(c)];
+      if (id) {
+        ids.push(id);
+      }
+    });
 
-  const prices = await _getPrices({ ids: ids.join(',') });
-  return {
-    ...prices,
-    ...notSupported,
-  };
+    const prices = await _getPrices({ ids: ids.join(',') });
+    return {
+      ...prices,
+      ...notSupported,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+  return {};
 };
 
 const _getFTMPrice = async () => {
-  const res = await coingeckoClient.coins.markets({
-    vs_currency: 'usd',
-    ids: 'fantom',
-  });
-  return res.data[0].current_price;
+  try {
+    const res = await coingeckoClient.coins.markets({
+      vs_currency: 'usd',
+      ids: 'fantom',
+    });
+    return res.data[0].current_price;
+  } catch (error) {
+    console.log(error);
+  }
+  return {};
 };
+
 const getFTMPrice = memoize(_getFTMPrice);
 
 module.exports = {

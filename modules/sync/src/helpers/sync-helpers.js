@@ -46,7 +46,7 @@ const insertElementToSyncQueue = async (items) => {
     throw new Error(error.message);
   }
 
-  return;
+  return data;
 }
 
 const markQueueElementAsProcessing = async (user_id) => {
@@ -97,7 +97,7 @@ const insertEligibleUsersToSyncQueue = async () => {
       }
     }
 
-    await insertElementToSyncQueue(eligibleUsers);
+    return await insertElementToSyncQueue(eligibleUsers);
   }
 
   return;

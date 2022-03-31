@@ -15,7 +15,7 @@ const BASE_URL = 'https://api.ethplorer.io';
 const getTokens = async address => {
   const requestURL = `${BASE_URL}/getAddressInfo/${address}?apiKey=freekey`;
   const response = await axios.get(requestURL);
-  
+
   const {
     ETH: {
       balance: ETHBalance,
@@ -78,14 +78,14 @@ const getProtocolCounts = async (addresses, net, combineAddresses = false) => {
     addresses.map(async addr => {
       const requestURL = `https://openapi.debank.com/v1/user/token_list?id=${addr}&chain_id=${net}&is_all=false&has_balance=true`;
       const response = await axios.get(requestURL);
-      let chains  = {};
+      let chains = {};
 
-      response.data.map( token => {
-        if(token.symbol.indexOf('.') !== -1){
+      response.data.map(token => {
+        if (token.symbol.indexOf('.') !== -1) {
           return;
         }
 
-        if(!token.price) {
+        if (!token.price) {
           return;
         }
 
@@ -95,7 +95,10 @@ const getProtocolCounts = async (addresses, net, combineAddresses = false) => {
       let n = `${net}-${addr}`
       output.push([n, chains]);
     })
-   )
+  ).catch((error) => {
+    console.log(error);
+    return [[], {}];
+  })
   return [output, allPrices];
 };
 
@@ -109,10 +112,10 @@ const getStakedCounts = async (addresses, net, combineAddresses = false) => {
     addresses.map(async addr => {
       const requestURL = `https://openapi.debank.com/v1/user/simple_protocol_list?id=${addr}&chain_id=${net}&is_all=true&has_balance=true`;
       const response = await axios.get(requestURL);
-      let chains  = {};
+      let chains = {};
 
-      response.data.map( token => {
-        if(token.id.indexOf('.') !== -1 || token.net_usd_value == 0){
+      response.data.map(token => {
+        if (token.id.indexOf('.') !== -1 || token.net_usd_value == 0) {
           return;
         }
         //console.log("token: ", token)
@@ -122,7 +125,10 @@ const getStakedCounts = async (addresses, net, combineAddresses = false) => {
       let n = `${net}-staked-${addr}`
       output.push([n, chains]);
     })
-   )
+  ).catch((error) => {
+    console.log(error);
+    return [[], {}];
+  });
 
   return [output, allPrices];
 };

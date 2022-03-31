@@ -36,3 +36,5 @@ yarn-error.log*
 
 #custom config
 /testing/data.js
+# Sentry
+.sentryclirc
