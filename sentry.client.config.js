@@ -4,7 +4,7 @@
 
 import * as Sentry from '@sentry/nextjs';
 
-const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
+const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN || 'https://c6d37b7f00ee40208e046f6fea644467@o1180605.ingest.sentry.io/6293483';
 
 Sentry.init({
   dsn: SENTRY_DSN,
