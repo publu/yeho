@@ -1,6 +1,8 @@
 const { initSupabase } = require('../supabase-connect');
 const { syncConfig } = require('../config/config');
 const { getAccountsCount } = require('../data/Account');
+const { updateFirstSyncStatus } = require('../data/Users');
+
 
 let supabase = initSupabase();
 const table = 'QFG.SyncQueue';
@@ -73,9 +75,11 @@ const insertEligibleUsersToSyncQueue = async () => {
 
   const { data, error } = await supabase
     .from(table)
-    .select('id, last_sync_time')
+    .select('id, last_sync_time, first_sync')
     .or('last_sync_time.is.null,last_sync_time.lte.' + eligibilityStartTime)
+    .neq('role', 'super_admin')
     .order('last_sync_time', { ascending: true })
+
 
   if (error) {
     throw new Error(error.message);
@@ -87,14 +91,22 @@ const insertEligibleUsersToSyncQueue = async () => {
 
     for (let i = 0; i < data.length; i++) {
       let count = await getAccountsCount(data[i].id);
+
+      // Update first sync status after users' first sync
+      if (data[i].first_sync) {
+        updateFirstSyncStatus(data[i].id);
+      }
+
       if (count && count > 0) {
         eligibleUser = {
           user_id: data[i].id,
-          priority: data[i].last_sync_time ? 0 : 1
+          priority: data[i].first_sync ? 1 : 0
         }
+
         eligibleUsers.push(eligibleUser);
         eligibleUser = {};
       }
+
     }
 
     return await insertElementToSyncQueue(eligibleUsers);
