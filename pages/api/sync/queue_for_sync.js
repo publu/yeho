@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
     insertEligibleUsersToSyncQueue();
   } catch (error) {
-    return res.status(500).json({ success: false, statusCode: 500, message: error.message });
+    return res.status(500).json({ success: false, statusCode: 500, message: error });
   }
 
   res.status(200).json({ success: true, statusCode: 200, message: 'OK' });
