@@ -1,6 +1,8 @@
 const { saveAccount } = require('../../../controllers/accounts');
 const { isUserAuthorized } = require('../../../helpers/user-auh');
 
+const { insertElementToSyncQueue } = require('../../../modules/sync/src/helpers/sync-helpers');
+
 export default async function handler(req, res) {
   let headers = req.headers;
   let token = headers['access-token'];
@@ -32,5 +34,12 @@ export default async function handler(req, res) {
   }
 
   let accounts = await saveAccount(user_id, data);
+
+  // sync user when new account is created
+  insertElementToSyncQueue({
+    user_id: user_id,
+    priority: 2 // high priority
+  });
+
   res.status(200).json(accounts);
 }

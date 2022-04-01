@@ -15,14 +15,24 @@ const getUserById = async (id) => {
 
 const updateLastSyncTime = async (user_id, last_sync_time) => {
   const { data, error } = await supabase
-  .from(table)
-  .update({ last_sync_time: last_sync_time })
-  .match({ id: user_id })
+    .from(table)
+    .update({ last_sync_time: last_sync_time })
+    .match({ id: user_id })
+
+  return await formatReturnData(error, data, table);
+}
+
+const updateFirstSyncStatus = async (user_id) => {
+  const { data, error } = await supabase
+    .from(table)
+    .update({ first_sync: false })
+    .match({ id: user_id })
 
   return await formatReturnData(error, data, table);
 }
 
 module.exports = {
   getUserById,
-  updateLastSyncTime
+  updateLastSyncTime,
+  updateFirstSyncStatus
 };
