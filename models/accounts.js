@@ -15,7 +15,7 @@ const getAllAccounts = async (user_id) => {
 
     const table = 'QFG.Wallet';
 
-    const { data, error } = await supabase
+    const { data: accounts, error } = await supabase
       .from(table)
       .select('id, account_type, cefi_account_provider, name, description, api_key, wallet_address, created_at')
       .eq('user_id', user_id)
@@ -28,7 +28,7 @@ const getAllAccounts = async (user_id) => {
     let cefiAccounts = [];
     let defiAccounts = [];
 
-    data.forEach(element => {
+    accounts.forEach(element => {
       let account = {};
 
       account.id = element.id;

@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 export default function Home() {
   return (
     <div className={styles.container}>
-      <Head>
+      {/* <Head>
         <title>Multichain & Exchange API</title>
         <meta name="description" content="Multichain & Exchange API" />
         <link rel="icon" href="/favicon.ico" />
@@ -122,7 +122,7 @@ $$$  eth  0x9dcc35ae915926f7f5e8c624254d91f755d55b71 tokens  $$$
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
-      </footer>
+      </footer> */}
     </div>
   )
 }

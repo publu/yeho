@@ -72,16 +72,16 @@ const changeManagerStatus = async (user_id, status) => {
   let table = 'QFG.Users';
   try {
 
-    const { data, error } = await supabase
+    const { data: managers, error } = await supabase
       .from(table)
       .update({ status: status })
       .match({ id: user_id })
 
     if (error) {
-      throw new Error('Error deleting user from database. ' + error.message);
+      throw new Error('Error updating user in database. ' + error.message);
     }
 
-    return data;
+    return managers;
   } catch (e) {
     console.log(e);
   }

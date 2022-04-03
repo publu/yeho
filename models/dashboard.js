@@ -132,12 +132,12 @@ const getPortfolioSnapshot = async (user_id, getFirstSnapshotOfDay = false) => {
         .limit(1)
     }
 
-    const { data, error } = await query
+    const { data: portfolio, error } = await query
 
     if (error) {
       throw new Error('Error getting portfolio from database.');
     }
-    return data[0];
+    return [portfolio[0]];
   } catch (e) {
     console.log(e);
   }
@@ -171,13 +171,13 @@ const getAllPortfolioSnapshot = async (user_id, filter = false) => {
       query = query.gte('timestamp', filter)
     }
 
-    const { data, error } = await query
+    const { data: portfolioi, error } = await query
 
     if (error) {
       throw new Error('Error getting portfolio from database. ' + error.message);
     }
-    console.log(data);
-    return data;
+
+    return portfolioi;
   } catch (e) {
     console.log(e);
   }

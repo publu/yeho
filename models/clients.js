@@ -14,7 +14,7 @@ const getAllClients = async (user_id) => {
       throw new Error('UserId not suppiled');
     }
 
-    const { data, error } = await supabase
+    const { data: clients, error } = await supabase
       .from(table)
       .select()
       .eq('user_id', user_id)
@@ -23,7 +23,7 @@ const getAllClients = async (user_id) => {
       throw new Error('Error getting accounts from database.');
     }
 
-    return data;
+    return clients;
   } catch (e) {
     console.log(e);
   }
@@ -42,7 +42,7 @@ const createClient = async (user_id, client_data) => {
       throw new Error('UserId not suppiled');
     }
 
-    const { data, error } = await supabase
+    const { data: clients, error } = await supabase
       .from(table)
       .insert([
         client_data
@@ -52,7 +52,7 @@ const createClient = async (user_id, client_data) => {
       throw new Error('Error getting accounts from database.');
     }
 
-    return data;
+    return clients;
   } catch (e) {
     console.log(e);
   }

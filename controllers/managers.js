@@ -61,11 +61,9 @@ const updateManagerStatus = async (user_id, status) => {
   }
 
   try {
-    let supabase = initSupabase();
 
-    await changeManagerStatus(user_id, status);
+    return await changeManagerStatus(user_id, status);
 
-    return true;
   } catch (e) {
     console.error(e);
   }
