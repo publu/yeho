@@ -80,7 +80,6 @@ const insertEligibleUsersToSyncQueue = async () => {
     .neq('role', 'super_admin')
     .order('last_sync_time', { ascending: true })
 
-
   if (error) {
     throw new Error(error.message);
   }
@@ -94,7 +93,7 @@ const insertEligibleUsersToSyncQueue = async () => {
 
       // Update first sync status after users' first sync
       if (data[i].first_sync) {
-        updateFirstSyncStatus(data[i].id);
+        await updateFirstSyncStatus(data[i].id);
       }
 
       if (count && count > 0) {
