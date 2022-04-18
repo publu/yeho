@@ -1,5 +1,3 @@
-const { withSentryConfig } = require('@sentry/nextjs');
-
 module.exports = {
   reactStrictMode: true,
   async headers() {

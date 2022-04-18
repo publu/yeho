@@ -1,4 +1,4 @@
-const { getAllAccounts, createAccount, removeAccounts } = require('../models/accounts');
+const { getAllAccounts, createAccount, removeAccounts, updateAccounts } = require('../models/accounts');
 
 const getAccounts = async (user_id) => {
   try {
@@ -27,6 +27,20 @@ const saveAccount = async (user_id, data) => {
   }
 }
 
+const updateAccount = async (account_id, data) => {
+  try {
+    if (!account_id) {
+      throw new Error('account_id not suppiled');
+    }
+
+    let accounts = await updateAccounts(account_id, data);
+
+    return accounts;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 const deleteAccounts = async (user_id, account_ids) => {
   try {
     if (!user_id) {
@@ -48,5 +62,6 @@ const deleteAccounts = async (user_id, account_ids) => {
 module.exports = {
   saveAccount,
   getAccounts,
-  deleteAccounts
+  deleteAccounts,
+  updateAccount
 }

@@ -84,6 +84,37 @@ const createAccount = async (user_id, wallet_data) => {
 }
 
 /**
+ * Save a wallet to database
+ * @param {string} user_id
+ * @param {json} wallet_data
+ * @returns json
+ */
+const updateAccounts = async (account_id, wallet_data) => {
+  try {
+    if (!account_id) {
+      throw new Error('account_id not suppiled');
+    }
+
+    const table = 'QFG.Wallet';
+
+    const { data, error } = await supabase
+      .from(table)
+      .update(
+        wallet_data
+      )
+      .match({ id: account_id })
+
+    if (error) {
+      throw new Error('Error updating accounts in the database.');
+    }
+
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+/**
  * Remove wallets from database
  * @param {string} user_id
  * @param {json} data
@@ -137,5 +168,6 @@ module.exports = {
   getAllAccounts,
   createAccount,
   removeAccounts,
-  removeAllAccounts
+  removeAllAccounts,
+  updateAccounts
 }
