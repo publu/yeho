@@ -19,6 +19,10 @@ const updateLastSyncTime = async (user_id, last_sync_time) => {
     .update({ last_sync_time: last_sync_time })
     .match({ id: user_id })
 
+  if (error) {
+    throw new Error(error);
+  }
+
   return await formatReturnData(error, data, table);
 }
 

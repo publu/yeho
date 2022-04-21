@@ -15,8 +15,7 @@ async function sync(user_id) {
     const data = await getAccounts(user_id);
 
     if (!data) {
-      console.error('Wallet account data not found');
-      return;
+      throw new Error('Wallet account data not found');
     }
 
     //serves as sync lot number for storage
@@ -45,27 +44,39 @@ async function sync(user_id) {
       othertokens,
       combineExchanges,
       extraFetchers
-    });
+    })
+      .catch((error) => {
+        console.log(error);
+      });
 
     //get prepared portfolio data for insertion
     // let formattedPortfolio = await formatPortfolio(user_id, sync_time, portfolio);
-    let formattedPortfolioSnapshot = await formatPortfolioSnapshot(user_id, sync_time, portfolio);
+    let formattedPortfolioSnapshot = await formatPortfolioSnapshot(user_id, sync_time, portfolio)
+      .catch((error) => {
+        console.log(error);
+      });
 
     //bulk insert portfolio data to database
     // let portfolioInsertResult = await insertPortfolio(formattedPortfolio.portfolio);
     // let totalPortfolioInsertResult = await insertTotalPortfolio(formattedPortfolio.total);
-    let portfolioSnapshotInsertResult = await insertPortfolioSnapshot(formattedPortfolioSnapshot);
+    let portfolioSnapshotInsertResult = await insertPortfolioSnapshot(formattedPortfolioSnapshot)
+      .catch((error) => {
+        console.log(error);
+      });
 
     //Commit sync if no error found
     if (!portfolioSnapshotInsertResult.error) {
       await updateLastSyncTime(user_id, sync_time);
+      return true;
     }
-    // else {
-    //     await revertPortfolioSnapshotSync(user_id, sync_time);
-    // }
+    else {
+      // await revertPortfolioSnapshotSync(user_id, sync_time);
+      return false;
+    }
 
   } catch (e) {
     console.error(e);
+    return false;
   }
 }
 

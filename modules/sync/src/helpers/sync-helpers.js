@@ -3,7 +3,6 @@ const { syncConfig } = require('../config/config');
 const { getAccountsCount } = require('../data/Account');
 const { updateFirstSyncStatus } = require('../data/Users');
 
-
 let supabase = initSupabase();
 const table = 'QFG.SyncQueue';
 
@@ -11,7 +10,7 @@ const getElementFromSyncQueue = async () => {
   const { data, error } = await supabase
     .from(table)
     .select()
-    .neq('processing', true)
+    // .neq('processing', true)
     .order('priority', { ascending: false })
     .order('created_at', { ascending: true })
     .limit(1)
@@ -28,10 +27,14 @@ const getElementFromSyncQueue = async () => {
 }
 
 const removeElementFromSyncQueue = async (user_id) => {
-  await supabase
+  const { error } = await supabase
     .from(table)
     .delete()
     .match({ user_id: user_id })
+
+  if (error) {
+    throw new Error(error);
+  }
 
   return;
 }
@@ -45,10 +48,10 @@ const insertElementToSyncQueue = async (items) => {
     )
 
   if (error) {
-    throw new Error(error.message);
+    return false;
   }
 
-  return data;
+  return true;
 }
 
 const markQueueElementAsProcessing = async (user_id) => {
@@ -56,11 +59,24 @@ const markQueueElementAsProcessing = async (user_id) => {
     throw new Error('user_id is required');
   }
 
-  await supabase
+  const { error, data } = await supabase
     .from(table)
     .update({ processing: true })
     .match({ user_id: user_id })
 
+  return;
+}
+
+const updateUserLastQueueTime = async (user_id) => {
+  if (!user_id) {
+    throw new Error('user_id is required');
+  }
+  let timestamp = new Date;
+
+  const { data, error } = await supabase
+    .from('QFG.Users')
+    .update({ last_queue_time: timestamp })
+    .match({ id: user_id })
   return;
 }
 
@@ -78,40 +94,51 @@ const insertEligibleUsersToSyncQueue = async () => {
     .select('id, last_sync_time, first_sync')
     .or('last_sync_time.is.null,last_sync_time.lte.' + eligibilityStartTime)
     .neq('role', 'super_admin')
-    .order('last_sync_time', { ascending: true })
+    .order('last_queue_time', { ascending: true })
+    .limit(1)
+
+  await updateUserLastQueueTime(data[0].id);
 
   if (error) {
     throw new Error(error.message);
   }
-
   if (data.length > 0) {
-    let eligibleUsers = [];
-    let eligibleUser = {};
-
-    for (let i = 0; i < data.length; i++) {
-      let count = await getAccountsCount(data[i].id);
-
-      // Update first sync status after users' first sync
-      if (data[i].first_sync) {
-        await updateFirstSyncStatus(data[i].id);
+    let count = await getAccountsCount(data[0].id);
+    if (count <= 0) {
+      return {
+        success: true,
+        message: 'No wallet found.'
       }
-
-      if (count && count > 0) {
-        eligibleUser = {
-          user_id: data[i].id,
-          priority: data[i].first_sync ? 1 : 0
-        }
-
-        eligibleUsers.push(eligibleUser);
-        eligibleUser = {};
-      }
-
     }
 
-    return await insertElementToSyncQueue(eligibleUsers);
-  }
+    // // Update first sync status after users' first sync
+    // if (data[0].first_sync) {
+    //   await updateFirstSyncStatus(data[0].id);
+    // }
 
-  return;
+    let eligibleUser = [{
+      user_id: data[0].id,
+      priority: /*data[0].first_sync ? 1 : 0*/ 0
+    }]
+
+    let insert_status = await insertElementToSyncQueue(eligibleUser);
+    if (insert_status) {
+      return {
+        success: true,
+        message: 'Success'
+      }
+    } else {
+      return {
+        success: false,
+        message: 'Queue insert Failed'
+      }
+    }
+  } else {
+    return {
+      success: true,
+      message: 'Queue Empty'
+    }
+  }
 }
 
 module.exports = {

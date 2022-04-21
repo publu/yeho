@@ -11,25 +11,29 @@ const table = 'QFG.PortfolioSnapshot';
  * @returns json
  */
 const getPortfolioSnapshot = async (filters) => {
-    let query = supabase
-        .from(table)
-        .select()
+  let query = supabase
+    .from(table)
+    .select()
 
-    for (const key in filters) {
-        query = query.eq(key, filters[key]);
-    }
+  for (const key in filters) {
+    query = query.eq(key, filters[key]);
+  }
 
-    const { error, data } = await query;
+  const { error, data } = await query;
 
-    return formatReturnData(error, data, table);
+  return formatReturnData(error, data, table);
 }
 
 const insertPortfolioSnapshot = async (portfolio) => {
-    const { data, error } = await supabase
-        .from(table)
-        .insert(portfolio)
+  const { data, error } = await supabase
+    .from(table)
+    .insert(portfolio)
 
-    return formatReturnData(error, data, table);
+  if (error) {
+    throw new Error(error);
+  }
+
+  return formatReturnData(error, data, table);
 }
 
 /**
@@ -39,16 +43,16 @@ const insertPortfolioSnapshot = async (portfolio) => {
  * @returns {json}
  */
 const revertPortfolioSnapshotSync = async (user_id, sync_time) => {
-    const { data, error } = await supabase
-        .from(table)
-        .delete()
-        .match({ user_id: user_id, timestamp: sync_time })
+  const { data, error } = await supabase
+    .from(table)
+    .delete()
+    .match({ user_id: user_id, timestamp: sync_time })
 
-    return formatReturnData(error, data, table);
+  return formatReturnData(error, data, table);
 }
 
 module.exports = {
-    getPortfolioSnapshot,
-    insertPortfolioSnapshot,
-    revertPortfolioSnapshotSync,
+  getPortfolioSnapshot,
+  insertPortfolioSnapshot,
+  revertPortfolioSnapshotSync,
 };

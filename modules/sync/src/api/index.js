@@ -1,14 +1,8 @@
-const chalk = require('chalk');
-
 const utils = require('./utils/utils');
 const portfolioUtils = require('./utils/portfolioUtils');
 const ethUtils = require('./utils/ethUtils');
 const exchangeUtils = require('./utils/exchangeUtils');
 const marketUtils = require('./utils/marketUtils');
-
-var term = require('terminal-kit').terminal;
-
-var progressBar, progress = 0;
 
 const {
   printPortfolioNicely,
@@ -59,97 +53,128 @@ const getPortfolio = async ({
 
   var count = 8;
 
-  progressBar = term.progressBar({
-    width: 200,
-    title: 'Started to fetch portfolio data ...',
-    eta: true,
-    percent: true,
-    items: count
-  });
+  try {
 
-  progressBar.startItem('fetching exchange token counts ...')
-  const exchangeTokenCounts = await getExchangeTokenCounts(keys, extraFetchers, combineExchanges);
-  progressBar.update(another() / count);
+    console.log('fetching exchange token counts ...')
+    const exchangeTokenCounts = await getExchangeTokenCounts(keys, extraFetchers, combineExchanges)
+      .catch((error) => {
+        console.log(error)
+      });
 
-  progressBar.startItem('fetching Eth Tokens ...');
-  const [ethTokenCounts, ethTokenPrices] = await getProtocolCounts(addresses, "eth", combineAddresses);
-  progressBar.update(another() / count);
+    console.log('fetching Eth Tokens ...');
+    const [ethTokenCounts, ethTokenPrices] = await getProtocolCounts(addresses, "eth", combineAddresses)
+      .catch((error) => {
+        console.log(error)
+      });
 
-  progressBar.startItem('fetching BSC Tokens ...');
-  const [bscTokenCounts, bscTokenPrices] = await getProtocolCounts(addresses, "bsc", combineAddresses);
-  progressBar.update(another() / count);
 
-  progressBar.startItem('fetching Polygon Tokens counts ...');
-  const [maticTokenCounts, maticTokenPrices] = await getProtocolCounts(addresses, "matic", combineAddresses);
-  progressBar.update(another() / count);
+    console.log('fetching BSC Tokens ...');
+    const [bscTokenCounts, bscTokenPrices] = await getProtocolCounts(addresses, "bsc", combineAddresses)
+      .catch((error) => {
+        console.log(error)
+      });
 
-  progressBar.startItem('fetching Fantom Tokens counts ...');
-  const [fantomTokenCounts, fantomTokenPrices] = await getProtocolCounts(addresses, "ftm", combineAddresses);
-  progressBar.update(another() / count);
 
-  const [stakedMaticTokenCounts, stakedMaticTokenPrices] = await getStakedCounts(addresses, "matic", combineAddresses);
+    console.log('fetching Polygon Tokens counts ...');
+    const [maticTokenCounts, maticTokenPrices] = await getProtocolCounts(addresses, "matic", combineAddresses)
+      .catch((error) => {
+        console.log(error)
+      });
 
-  const [stakedEthTokenCounts, stakedEthTokenPrices] = await getStakedCounts(addresses, "eth", combineAddresses);
 
-  const [stakedFantomTokenCounts, stakedFantomTokenPrices] = await getStakedCounts(addresses, "ftm", combineAddresses);
+    console.log('fetching Fantom Tokens counts ...');
+    const [fantomTokenCounts, fantomTokenPrices] = await getProtocolCounts(addresses, "ftm", combineAddresses)
+      .catch((error) => {
+        console.log(error)
+      });
 
-  const [stakedBscTokenCounts, stakedBscTokenPrices] = await getStakedCounts(addresses, "bsc", combineAddresses);
 
-  progressBar.startItem('fetching other token counts ...');
-  const otherTokenCounts = sumOtherTokenCounts(othertokens);
+    const [stakedMaticTokenCounts, stakedMaticTokenPrices] = await getStakedCounts(addresses, "matic", combineAddresses)
+      .catch((error) => {
+        console.log(error)
+      });
 
-  let eachTokenCounts = [
-    ...exchangeTokenCounts,
-    ...ethTokenCounts,
-    ...stakedEthTokenCounts,
-    ...bscTokenCounts,
-    ...stakedBscTokenCounts,
-    ...maticTokenCounts,
-    ...stakedMaticTokenCounts,
-    ...fantomTokenCounts,
-    ...stakedFantomTokenCounts,
-    ...otherTokenCounts
-  ];
+    const [stakedEthTokenCounts, stakedEthTokenPrices] = await getStakedCounts(addresses, "eth", combineAddresses)
+      .catch((error) => {
+        console.log(error)
+      });
 
-  //console.log(eachTokenCounts);
+    const [stakedFantomTokenCounts, stakedFantomTokenPrices] = await getStakedCounts(addresses, "ftm", combineAddresses)
+      .catch((error) => {
+        console.log(error)
+      });
 
-  const allTokenCounts = combineTokenCounts(
-    ...eachTokenCounts.map(([, counts]) => counts)
-  );
+    const [stakedBscTokenCounts, stakedBscTokenPrices] = await getStakedCounts(addresses, "bsc", combineAddresses)
+      .catch((error) => {
+        console.log(error)
+      });
 
-  eachTokenCounts = [
-    ...eachTokenCounts,
-    ['all', allTokenCounts],
-  ];
+    console.log('fetching other token counts ...');
+    const otherTokenCounts = sumOtherTokenCounts(othertokens);
 
-  progressBar.startItem('fetching all token prices ...');
-  progressBar.update(another() / count);
+    let eachTokenCounts = [
+      ...exchangeTokenCounts,
+      ...ethTokenCounts,
+      ...stakedEthTokenCounts,
+      ...bscTokenCounts,
+      ...stakedBscTokenCounts,
+      ...maticTokenCounts,
+      ...stakedMaticTokenCounts,
+      ...fantomTokenCounts,
+      ...stakedFantomTokenCounts,
+      ...otherTokenCounts
+    ];
 
-  const FTMprice = await getFTMPrice();
+    //console.log(eachTokenCounts);
 
-  let tokenPrices = await getPrices(Object.keys(allTokenCounts), verbose);
+    const allTokenCounts = combineTokenCounts(
+      ...eachTokenCounts.map(([, counts]) => counts)
+    );
 
-  progressBar.startItem('calculating all token values ...');
-  progressBar.update(another() / count);
+    eachTokenCounts = [
+      ...eachTokenCounts,
+      ['all', allTokenCounts],
+    ];
 
-  let allTokenPrices = {
-    ...ethTokenPrices,
-    ...bscTokenPrices,
-    ...maticTokenPrices,
-    ...fantomTokenPrices,
-    ...stakedMaticTokenPrices,
-    ...stakedEthTokenPrices,
-    ...stakedFantomTokenPrices,
-    ...stakedBscTokenPrices,
-    ...tokenPrices
-  };
+    console.log('fetching all token prices ...');
 
-  const allTokenValues = eachTokenCounts.map(([name, counts]) => {
-    const values = getTokenValues(counts, allTokenPrices, FTMprice);
-    return [name, values];
-  });
 
-  return Object.fromEntries(allTokenValues);
+    const FTMprice = await getFTMPrice()
+      .catch((error) => {
+        console.log(error)
+      });
+
+    let tokenPrices = await getPrices(Object.keys(allTokenCounts), verbose)
+      .catch((error) => {
+        console.log(error)
+      });
+
+    console.log('calculating all token values ...');
+
+
+    let allTokenPrices = {
+      ...ethTokenPrices,
+      ...bscTokenPrices,
+      ...maticTokenPrices,
+      ...fantomTokenPrices,
+      ...stakedMaticTokenPrices,
+      ...stakedEthTokenPrices,
+      ...stakedFantomTokenPrices,
+      ...stakedBscTokenPrices,
+      ...tokenPrices
+    };
+
+    const allTokenValues = eachTokenCounts.map(([name, counts]) => {
+      const values = getTokenValues(counts, allTokenPrices, FTMprice);
+      return [name, values];
+    });
+
+    return Object.fromEntries(allTokenValues);
+
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 };
 
 module.exports = {

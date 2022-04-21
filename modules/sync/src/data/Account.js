@@ -16,6 +16,10 @@ const getAccounts = async (user_id) => {
     .select()
     .eq('user_id', user_id)
 
+  if (error) {
+    throw new Error(error);
+  }
+
   return formatAccountData(error, data, table);
 }
 
